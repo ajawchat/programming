@@ -1,7 +1,3 @@
-# Adding this line for testing
-
-# Longest Common Subsequence - Lab 9
-# Ajinkya Awchat
 
 def getLCS(A,B):
     # Initialize the 2D array
