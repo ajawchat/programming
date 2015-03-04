@@ -19,20 +19,21 @@ public class Tree3 {
 	
 	
 	public void traversePath(Node curr, int val, ArrayList coveredPath){
-		System.out.println("In traverse");
+		//System.out.println("In traverse");
 		
 		if(curr != null){
 			// Iterate over the ArrayList and check for each node from the end
 			int sum = curr.data;
 			for(int i = coveredPath.size() - 1; i >= 0; i--){
-				System.out.println("Curr Node: "+curr.data+" , curr comp:"+coveredPath.get(i));
+				//System.out.println("Curr Node: "+curr.data+" , curr comp:"+coveredPath.get(i));
 				sum += (int)coveredPath.get(i);
 				
 				if (sum == val){
 					// The values added upto the required value. Print the path
-					System.out.println("Path Found");
+					System.out.print("\nPath Found: ");
 					for(int j = i; j < coveredPath.size(); j++)
-						System.out.print(coveredPath.get(j) +" "+ curr.data);
+						System.out.print(" "+coveredPath.get(j));
+					System.out.print(" "+curr.data);
 				}
 				else if (sum > val){
 					// No path found ending in this node. Break out of the loop
@@ -47,12 +48,20 @@ public class Tree3 {
 			traversePath(curr.left, val, coveredPath);		
 			
 			// Before traversing to the right side, remove the children from the left child in the arraylist
+			deleteNodesFromArray(coveredPath, curr.data);
 			
 			// Traverse the right of the currNode
 			traversePath(curr.right, val, coveredPath);
 		}
 		else
 			return;
+	}
+	
+	
+	public void deleteNodesFromArray(ArrayList coveredPath, int val){
+		for(int i = coveredPath.size()-1; (int)coveredPath.get(i) != val; i--){
+			coveredPath.remove(i);
+		}
 	}
 
 
