@@ -41,27 +41,26 @@ class BuildTrie{
 				temp = temp.child;
 				while(temp.sibling != null){
 					temp = temp.sibling;
-					if(temp.title == doc[i].charAt(0)){
+					if(temp.title == firstChar){
+						System.out.println("Found char "+firstChar);
 						break;
 					}
 				}
 				// Check if the first character is already entered into the root node, else enter it manually
-				if(temp.title != doc[i].charAt(0)){
-					TrieNode newFirstChar = new TrieNode(doc[i].charAt(0));
+				if(temp.title != firstChar){
+					TrieNode newFirstChar = new TrieNode(firstChar);
 					temp.sibling = newFirstChar;
 					temp.sibling.isFinalNode = false;
 					temp = newFirstChar;
 				}
 			}
 			
-			
-			
 			for(int j = 1; j < doc[i].length(); j++){
 				temp = insertNode(temp,doc[i].charAt(j));
-				System.out.println("Entered char into trie");
 			}
 		}
 	}
+	
 	
 	
 	public TrieNode insertNode(TrieNode curr, char current){
@@ -76,15 +75,16 @@ class BuildTrie{
 		else{
 			// traverse the link list till the end
 			TrieNode tempLink = curr.child;
-			while(tempLink.child != null){
-				tempLink = tempLink.child;
+			while(tempLink != null){
 				// Find the character we require
 				if(tempLink.title == current){
 					// Go inside the object and further traverse it
+					System.out.println("Found character "+current+", not re-entering it...");
 					return tempLink;
 				}
+				tempLink = tempLink.sibling;
 			}
-			// Reaching at this point would mean there is no such character in the trie as of now. So we insert it
+			// Reaching at this point would mean there is no such character in the trie at that level. So we insert it
 			TrieNode newNode = new TrieNode(current);
 			tempLink.isFinalNode = false;
 			tempLink.child = newNode;
@@ -101,13 +101,18 @@ class BuildTrie{
 		System.out.println("The root is "+temp.title);
 		//System.out.println(temp.child.title);
 		//System.out.println(temp.child.sibling.title);
+		temp = temp.child;
+		// navigate the siblings
 		while(temp != null){
-			System.out.print(temp.title+" -> ");
-			temp = temp.child;
+			System.out.println("\nstarting with "+temp.title);
+			TrieNode child = temp;
+			while(child != null){
+				System.out.print(child.title+" -> ");
+				child = child.child;
+			}
+			temp = temp.sibling;
 		}
 	}
-	
-	
 	
 }
 
@@ -116,7 +121,7 @@ public class StandardTries {
 	
 	public static void main(String[] args){ 
 	
-		String doc[] = {"this","is","a","test"};
+		String doc[] = {"this","is","a","testin","testing"};
 		
 		BuildTrie trie = new BuildTrie();
 		trie.createTrie(doc);
