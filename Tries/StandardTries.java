@@ -40,11 +40,11 @@ class BuildTrie{
 			else{
 				temp = temp.child;
 				while(temp.sibling != null){
-					temp = temp.sibling;
 					if(temp.title == firstChar){
 						System.out.println("Found char "+firstChar);
 						break;
 					}
+					temp = temp.sibling;
 				}
 				// Check if the first character is already entered into the root node, else enter it manually
 				if(temp.title != firstChar){
@@ -75,6 +75,7 @@ class BuildTrie{
 		else{
 			// traverse the link list till the end
 			TrieNode tempLink = curr.child;
+			TrieNode tempLink2 = tempLink;
 			while(tempLink != null){
 				// Find the character we require
 				if(tempLink.title == current){
@@ -82,13 +83,16 @@ class BuildTrie{
 					System.out.println("Found character "+current+", not re-entering it...");
 					return tempLink;
 				}
+				tempLink2 = tempLink;
 				tempLink = tempLink.sibling;
 			}
 			// Reaching at this point would mean there is no such character in the trie at that level. So we insert it
+			//System.out.println("Current char to be aded is "+current);
 			TrieNode newNode = new TrieNode(current);
-			tempLink.isFinalNode = false;
-			tempLink.child = newNode;
+			tempLink2.isFinalNode = false;
+			tempLink2.sibling = newNode;
 			return newNode;
+		
 		}
 		
 		
@@ -105,14 +109,54 @@ class BuildTrie{
 		// navigate the siblings
 		while(temp != null){
 			System.out.println("\nstarting with "+temp.title);
-			TrieNode child = temp;
-			while(child != null){
-				System.out.print(child.title+" -> ");
-				child = child.child;
+			TrieNode rootChild = temp;
+			while(rootChild != null){
+				System.out.println("\nCurr char: "+rootChild.title);
+				TrieNode splits = rootChild.child;
+				while(splits != null){
+					System.out.print("siblings:"+splits.title+",");
+					splits = splits.sibling;
+				}
+				rootChild = rootChild.child;
 			}
 			temp = temp.sibling;
 		}
 	}
+	
+	
+	// Implement the searching functionality
+	public boolean isPresentinTrie(String word){
+		
+		TrieNode temp = root;
+		
+		int i = 0;
+		boolean found = false;
+		
+		while(temp != null && i < word.length()){
+			found = false;
+			// we need to select the right child
+			TrieNode tempChild = temp.child;
+			while(tempChild != null){
+				if(tempChild.title == word.charAt(i)){
+					System.out.println("Found char "+word.charAt(i));
+					temp = tempChild;
+					found = true;
+				}
+				tempChild = tempChild.sibling;
+			}
+			
+			if(!found)
+				return false;
+			else
+				i++;
+		}
+		if(!found && i >= word.length())
+			return false;
+		else
+			return true;
+	}
+	
+	
 	
 }
 
@@ -121,11 +165,12 @@ public class StandardTries {
 	
 	public static void main(String[] args){ 
 	
-		String doc[] = {"this","is","a","testin","testing"};
+		String doc[] = {"this","is","a","test","testing","them"};
 		
 		BuildTrie trie = new BuildTrie();
 		trie.createTrie(doc);
 		trie.displayTrie();
+		System.out.println(trie.isPresentinTrie("testing"));
 		
 	}
 	
